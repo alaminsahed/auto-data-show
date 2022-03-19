@@ -11,18 +11,20 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useStyles } from "../App";
 
 type InfoType = {
   title: string;
   url: string;
   created_at: Date;
   author: string;
-  objectID: number;
 };
 
 const Home = () => {
   const [page, setPage] = useState(0);
   const [info, setInfo] = useState<InfoType[]>([]);
+  const classes = useStyles();
+
   const navigate = useNavigate();
 
   const pageHandler = (event: React.ChangeEvent<unknown>, value: number) => {
@@ -54,7 +56,7 @@ const Home = () => {
   return (
     <div>
       <Paper>
-        <TableContainer>
+        <TableContainer className={classes.body}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
@@ -65,9 +67,12 @@ const Home = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {info.slice(page * 10, page * 10 + 10).map((value, i) => {
+              {info.slice(page * 15, page * 15 + 15).map((value, i) => {
                 return (
-                  <TableRow onClick={() => detailsInfo(value)}>
+                  <TableRow
+                    onClick={() => detailsInfo(value)}
+                    className={classes.pointer}
+                  >
                     <TableCell>{value.created_at}</TableCell>
                     <TableCell>{value.title}</TableCell>
                     <TableCell>{value.author}</TableCell>
@@ -77,6 +82,7 @@ const Home = () => {
               })}
             </TableBody>
           </Table>
+          <br />
           <Pagination
             count={page + 1}
             page={page}
