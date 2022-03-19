@@ -10,6 +10,7 @@ import {
   Table,
 } from "@mui/material";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 type InfoType = {
   title: string;
@@ -22,12 +23,17 @@ type InfoType = {
 const Home = () => {
   const [page, setPage] = useState(0);
   const [info, setInfo] = useState<InfoType[]>([]);
+  const navigate = useNavigate();
+
+  const pageHandler = (event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+  };
 
   useEffect(() => {
     fetchData();
     const autoTiming = setTimeout(() => {
       setPage((prev) => prev + 1);
-    }, 1000);
+    }, 10000);
 
     return () => {
       clearInterval(autoTiming);
@@ -42,16 +48,17 @@ const Home = () => {
       .then((res) => setInfo([...info, ...res.data.hits]));
   };
 
+  const detailsInfo = (value: any) => {
+    navigate("/infoDetails", { state: value });
+  };
   return (
     <div>
-      <h1>working</h1>
-
       <Paper>
         <TableContainer>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
-                {/* <TableCell>Created_at</TableCell> */}
+                <TableCell>Created_at</TableCell>
                 <TableCell>Title</TableCell>
                 <TableCell>Author</TableCell>
                 <TableCell>URL</TableCell>
@@ -60,11 +67,11 @@ const Home = () => {
             <TableBody>
               {info.slice(page * 10, page * 10 + 10).map((value, i) => {
                 return (
-                  <TableRow>
+                  <TableRow onClick={() => detailsInfo(value)}>
+                    <TableCell>{value.created_at}</TableCell>
                     <TableCell>{value.title}</TableCell>
                     <TableCell>{value.author}</TableCell>
                     <TableCell>{value.url}</TableCell>
-                    <TableCell>{value.created_at}</TableCell>
                   </TableRow>
                 );
               })}
@@ -76,6 +83,7 @@ const Home = () => {
             color="primary"
             variant="outlined"
             shape="rounded"
+            onChange={pageHandler}
           />
         </TableContainer>
       </Paper>
