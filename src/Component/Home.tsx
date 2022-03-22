@@ -40,7 +40,7 @@ const Home = () => {
     return () => {
       clearInterval(autoTiming);
     };
-  });
+  }, [page]);
 
   const fetchData = async () => {
     await axios
